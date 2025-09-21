@@ -1,7 +1,9 @@
 import { ADD_TASK, DELETE_TASK, TOGGLE_TASK } from "./constans";
 
+// Загружаем из localStorage
+const saved = localStorage.getItem("tasks");
 const initialState = {
-  tasks: []
+  tasks: saved ? JSON.parse(saved) : []
 };
 
 export function reducers(state = initialState, action) {
@@ -9,23 +11,20 @@ export function reducers(state = initialState, action) {
     case ADD_TASK:
       return {
         ...state,
-        tasks: [...state.tasks, { text: action.payload, done: false }]
+        tasks: [...state.tasks, action.payload]
       };
-
     case DELETE_TASK:
       return {
         ...state,
-        tasks: state.tasks.filter((t, i) => i !== action.payload)
+        tasks: state.tasks.filter((t) => t.id !== action.payload)
       };
-
     case TOGGLE_TASK:
       return {
         ...state,
-        tasks: state.tasks.map((t, i) =>
-          i === action.payload ? { ...t, done: !t.done } : t
+        tasks: state.tasks.map((t) =>
+          t.id === action.payload ? { ...t, done: !t.done } : t
         )
       };
-
     default:
       return state;
   }

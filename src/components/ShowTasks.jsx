@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_TASK, DELETE_TASK, TOGGLE_TASK } from "../redux/constans";
 import styles from "./styles.module.css";
@@ -11,9 +11,15 @@ export default function ShowTasks() {
   const [search, setSearch] = useState("");
   const [sortDone, setSortDone] = useState(false);
 
+  // Сохраняем задачи в localStorage при изменении
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
   const handleAddTask = () => {
     if (newTask.trim()) {
-      dispatch({ type: ADD_TASK, payload: newTask.trim() });
+      const id = "_" + Math.random().toString(36).substr(2, 9);
+      dispatch({ type: ADD_TASK, payload: { id, text: newTask.trim(), done: false } });
       setNewTask("");
     }
   };
@@ -59,26 +65,20 @@ export default function ShowTasks() {
       </div>
 
       <ul className={styles.list}>
-        {filteredTasks.map((t, index) => (
-          <li key={index} className={styles.listItem}>
+        {filteredTasks.map((t) => (
+          <li key={t.id} className={styles.listItem}>
             <label className={styles.label}>
               <input
                 type="checkbox"
                 checked={t.done}
-                onChange={() =>
-                  dispatch({ type: TOGGLE_TASK, payload: index })
-                }
+                onChange={() => dispatch({ type: TOGGLE_TASK, payload: t.id })}
               />
-              <span
-                className={`${styles.taskText} ${
-                  t.done ? styles.done : ""
-                }`}
-              >
+              <span className={`${styles.taskText} ${t.done ? styles.done : ""}`}>
                 {t.text}
               </span>
             </label>
             <button
-              onClick={() => dispatch({ type: DELETE_TASK, payload: index })}
+              onClick={() => dispatch({ type: DELETE_TASK, payload: t.id })}
               className={styles.deleteBtn}
             >
               ✖
