@@ -28,6 +28,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+
+
 }
 
 h1 {
@@ -65,4 +67,14 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;   /* по горизонтали */
+  align-items: center;       /* по вертикали */
+  min-width: 320px;
+  min-height: 100vh;
 }
