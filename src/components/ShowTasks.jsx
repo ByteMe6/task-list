@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_TASK, DELETE_TASK, TOGGLE_TASK } from "../redux/constans";
 import styles from "./styles.module.css";
+import { nanoid } from "nanoid";
 
 export default function ShowTasks() {
   const dispatch = useDispatch();
@@ -11,14 +12,14 @@ export default function ShowTasks() {
   const [search, setSearch] = useState("");
   const [sortDone, setSortDone] = useState(false);
 
-  // Сохраняем задачи в localStorage при изменении
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
+
   const handleAddTask = () => {
     if (newTask.trim()) {
-      const id = "_" + Math.random().toString(36).substr(2, 9);
+      const id = nanoid(); 
       dispatch({ type: ADD_TASK, payload: { id, text: newTask.trim(), done: false } });
       setNewTask("");
     }
